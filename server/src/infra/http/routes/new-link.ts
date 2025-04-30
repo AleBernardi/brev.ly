@@ -22,11 +22,15 @@ export const newLinkRoute: FastifyPluginAsyncZod = async server => {
         const data = request.body;
 
         if(!data.originalUrl) {
-            return reply.status(400).send({ message: 'Original URL is required.'})
+            return reply.status(400).send({ message: 'O link original é obrigatório.'})
         }
 
         if(!data.shortUrl) {
-            return reply.status(400).send({ message: 'Short URL is required.'})
+            return reply.status(400).send({ message: 'O link encurtado é obrigatório.'})
+        }
+
+        if(data.shortUrl === 'links' || data.shortUrl === 'not-found') {
+            return reply.status(400).send({ message: `O link encurtado  "${data.shortUrl}" é restrito.`})
         }
 
         const result = await insertLink({

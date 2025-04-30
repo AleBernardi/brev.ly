@@ -4,6 +4,7 @@ import { fastifySwagger } from "@fastify/swagger";
 import { fastifySwaggerUi } from "@fastify/swagger-ui";
 import { fastify } from "fastify";
 import { hasZodFastifySchemaValidationErrors, jsonSchemaTransform, serializerCompiler, validatorCompiler } from 'fastify-type-provider-zod';
+import { getLinkRoute } from "./routes/get-link";
 import { getLinksRoute } from "./routes/get-links";
 import { newLinkRoute } from "./routes/new-link";
 
@@ -39,6 +40,7 @@ server.register(fastifySwagger, {
 server.register(fastifySwaggerUi, {
     routePrefix: '/docs'
 })
+server.register(getLinkRoute);
 server.register(getLinksRoute);
 server.register(newLinkRoute);
 

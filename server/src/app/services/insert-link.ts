@@ -37,13 +37,13 @@ export async function insertLink (input: InsertLinkInput): Promise<Either<{ type
       if (error.code === "23505" && error.code === "links_short_url_unique") {
         return makeLeft({
           type: "DUPLICATE_SHORT_URL",
-          message: `The short URL ${shortUrl} already exists.`
+          message: `O link encurtado  "${shortUrl}" já existe.`
         });
       }
   
       return makeLeft({
         type: "UNKNOWN",
-        message: "Unexpected error when inserting the link."
+        message: "Algo deu errado ao salvar o link. Tente novamente em instantes!"
       });
     }
 }
