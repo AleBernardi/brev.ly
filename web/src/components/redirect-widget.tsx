@@ -7,22 +7,38 @@ import icon from "/Logo_Icon.svg";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
-const RedirectWidget = ({ url }: { url?: string | null }) => {
+const RedirectWidget = () => {
 
     const { link } = useParams();
     const [loading, setLoading] = useState(false);
+    const [urlOriginal, setUrlOriginal] = useState('');
     const previousLink = useRef<string | null>(null);
 
     useEffect(() => {
         if (link && link !== previousLink.current) {
             searchLink();
-            previousLink.current = link;  // Atualiza o link anterior
+            previousLink.current = link;
         }
+
+        const params = new URLSearchParams(window.location.search);
+        const urlOriginal = params.get('urlOriginal');
+        if (urlOriginal) {
+            setUrlOriginal(urlOriginal);
+
+            params.delete("urlOriginal");
+
+            const newUrl =
+                window.location.pathname + (params.toString() ? `?${params.toString()}` : '');
+            window.history.replaceState({}, '', newUrl);
+        }
+
     }, [link]);
 
     async function searchLink() {
 
         if (loading) return;
+
+        setLoading(true);
         await axios.get(apiUrl + "/" + link, {
             headers: {
                 "Content-Type": "application/json"
@@ -32,13 +48,12 @@ const RedirectWidget = ({ url }: { url?: string | null }) => {
                 let redirectUrl = response.data.link.originalUrl;
 
                 if (!/^https?:\/\//i.test(redirectUrl)) {
-                    redirectUrl = `http://${redirectUrl}`;
+                    redirectUrl = `https://${redirectUrl}`;
                 }
 
                 window.location.replace(redirectUrl);
             }
         }).catch((error) => {
-            console.log(error.response.status);
             if (error.response.status === 404) {
                 window.location.replace('not-found');
                 return;
@@ -63,8 +78,8 @@ const RedirectWidget = ({ url }: { url?: string | null }) => {
                     </p>
                     <p>
                         Não foi redirecionado?
-                        {url ? (
-                            <a href={url} className="pl-1 text-primary underline hover:text-primary-dark transition-colors duration-200">
+                        {urlOriginal !== '' ? (
+                            <a href={urlOriginal} className="pl-1 text-primary underline hover:text-primary-dark transition-colors duration-200">
                                 Acesse aqui
                             </a>
                         ) : (

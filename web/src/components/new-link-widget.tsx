@@ -10,7 +10,11 @@ interface FormData {
     shortUrl: string;
 }
 
-export function NewLinkWidget() {
+interface NewLinkWidgetProps {
+    onSuccess: () => void;
+}
+
+export function NewLinkWidget({ onSuccess }: NewLinkWidgetProps) {
 
     const { register, handleSubmit, reset, formState: { errors } } = useForm<FormData>();
 
@@ -23,6 +27,7 @@ export function NewLinkWidget() {
         }).then(() => {
             toast.success('Novo link salvo com sucesso!');
             reset();
+            onSuccess();
         }).catch((error) => {
             toast.error('Erro ao salvar o link.', {
                 description: error?.response?.data?.message || "Ocorreu um erro inesperado. Por favor, tente novamente em instantes."

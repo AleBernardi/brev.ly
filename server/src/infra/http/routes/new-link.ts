@@ -33,6 +33,10 @@ export const newLinkRoute: FastifyPluginAsyncZod = async server => {
             return reply.status(400).send({ message: `O link encurtado  "${data.shortUrl}" é restrito.`})
         }
 
+        if(!data.originalUrl.startsWith('https://')) {
+            data.originalUrl = 'https://' + data.originalUrl;
+        }
+
         const result = await insertLink({
             originalUrl: data.originalUrl,
             shortUrl: data.shortUrl

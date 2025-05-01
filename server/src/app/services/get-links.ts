@@ -9,7 +9,6 @@ type getLinksOutput = {
         originalUrl: string,
         shortUrl: string,
         accessCount: number,
-        createdAt: Date
     }[]
 }
 
@@ -21,7 +20,6 @@ export async function getLinks (): Promise<Either<null, getLinksOutput>> {
             originalUrl: schema.links.originalUrl,
             shortUrl: schema.links.shortUrl,
             accessCount: schema.links.accessCount,
-            createdAt: schema.links.createdAt,
         })
         .from(schema.links)
         .orderBy(fields => {
