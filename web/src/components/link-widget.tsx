@@ -19,7 +19,6 @@ export function LinkWidget({ link, onClick }: LinkWidgetProps) {
     const url = window.location;
 
     function copyShortLink() {
-        console.log(url + link.shortUrl);
         navigator.clipboard.writeText(url + link.shortUrl)
             .then(() => {
                 toast.success("Link copiado com sucesso", {
@@ -36,7 +35,7 @@ export function LinkWidget({ link, onClick }: LinkWidgetProps) {
             <div className="flex flex-col">
                 <a
                     onClick={() => {
-                        setInterval(() => {
+                        setTimeout(() => {
                             onClick();
                         }, 1000);
                     }}
@@ -45,7 +44,7 @@ export function LinkWidget({ link, onClick }: LinkWidgetProps) {
                     rel="noopener noreferrer"
                     className="text-sm font-medium text-blue-700 hover:underline"
                 >
-                    {url + link.shortUrl}
+                    {'brev.ly/' + link.shortUrl}
                 </a>
                 <span className="text-xs text-gray-500">
                     {link.originalUrl}

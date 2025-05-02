@@ -31,7 +31,7 @@ export function HomeWidget() {
             if (response?.data?.links) {
                 setLinks(response.data.links);
             }
-        }).catch((error) => {
+        }).catch(() => {
             toast.error('Erro ao consultar os links.', {
                 description: "Ocorreu um erro inesperado. Por favor, tente novamente em instantes."
             });
@@ -42,16 +42,17 @@ export function HomeWidget() {
     }
 
     return (
-        <div className="min-h-screen flex flex-col md:items-start items-center md:mt-24 p-2">
-            <div className="py-6">
-                <img src={logo} className="h-6" alt="Logo" />
-            </div>
-            <div className="flex flex-col md:flex-row gap-4 justify-center items-stretch">
-                <NewLinkWidget onSuccess={searchLinks} />
+        <div className="h-full w-full flex flex-col items-center md:py-8 py-4 px-3">
+            <div>
+                <div className="md:py-6 py-4 md:justify-items-start justify-items-center">
+                    <img src={logo} className="h-6" alt="Logo" />
+                </div>
+                <div className="flex flex-col md:flex-row gap-4 justify-center items-start">
+                    <NewLinkWidget onSuccess={searchLinks} />
 
-                <ListLinksWidget links={links} onClick={searchLinks} />
+                    <ListLinksWidget loading={loading} links={links} onClick={searchLinks} />
+                </div>
             </div>
-
-        </div>
+        </div >
     )
 }

@@ -21,7 +21,16 @@ export default {
         danger: {
           DEFAULT: '#B12C4D'
         }
-      }
+      },
+      keyframes: {
+        'loading-bar': {
+          '0%': { left: '-10rem' },
+          '100%': { left: '100%' },
+        },
+      },
+      animation: {
+        'loading-bar': 'loading-bar 1.2s ease-in-out infinite',
+      },
     },
   },
   plugins: [],

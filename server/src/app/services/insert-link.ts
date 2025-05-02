@@ -34,7 +34,7 @@ export async function insertLink (input: InsertLinkInput): Promise<Either<{ type
         });
     } catch (error: any) {
       // Postgres: código de erro 23505 = unique_violation
-      if (error.code === "23505" && error.code === "links_short_url_unique") {
+      if (error.code === "23505" && error.constraint_name === "links_short_url_unique") {
         return makeLeft({
           type: "DUPLICATE_SHORT_URL",
           message: `O link encurtado  "${shortUrl}" já existe.`
