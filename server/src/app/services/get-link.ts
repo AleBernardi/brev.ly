@@ -3,16 +3,15 @@ import { schema } from "@/infra/db/schemas";
 import { Either, makeLeft, makeRight } from "@/shared/either";
 import { eq } from 'drizzle-orm';
 
-type getLinksOutput = {
+type GetLinkOutput = {
     link: {
-        originalUrl: string,
-        shortUrl: string,
-    }
-}
+        originalUrl: string;
+        shortUrl: string;
+    };
+};
 
-export async function getLink (url: string): Promise<Either<null, getLinksOutput>> {
-    
-    const links = await db
+export async function getLink(shortUrl: string): Promise<Either<null, GetLinkOutput>> {
+    const [link] = await db
         .select({
             id: schema.links.id,
             originalUrl: schema.links.originalUrl,
@@ -20,24 +19,21 @@ export async function getLink (url: string): Promise<Either<null, getLinksOutput
             accessCount: schema.links.accessCount,
         })
         .from(schema.links)
-        .where(eq(schema.links.shortUrl, url));
-        
-    if (links.length === 0) {
-        return makeLeft(null)
+        .where(eq(schema.links.shortUrl, shortUrl));
+
+    if (!link) {
+        return makeLeft(null);
     }
 
-    const link = links[0];
-    
-    await db.update(schema.links)
-        .set({
-            accessCount: link.accessCount + 1
-        })
+    await db
+        .update(schema.links)
+        .set({ accessCount: link.accessCount + 1 })
         .where(eq(schema.links.id, link.id));
 
     return makeRight({
-        link: { 
+        link: {
             originalUrl: link.originalUrl,
-            shortUrl: link.shortUrl
-        }
+            shortUrl: link.shortUrl,
+        },
     });
 }

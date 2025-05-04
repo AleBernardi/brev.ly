@@ -3,17 +3,16 @@ import { schema } from "@/infra/db/schemas";
 import { Either, makeRight } from "@/shared/either";
 import { desc } from "drizzle-orm";
 
-type getLinksOutput = {
+type GetLinksOutput = {
     links: {
-        id: string,
-        originalUrl: string,
-        shortUrl: string,
-        accessCount: number,
-    }[]
-}
+        id: string;
+        originalUrl: string;
+        shortUrl: string;
+        accessCount: number;
+    }[];
+};
 
-export async function getLinks (): Promise<Either<null, getLinksOutput>> {
-    
+export async function getLinks(): Promise<Either<null, GetLinksOutput>> {
     const links = await db
         .select({
             id: schema.links.id,
@@ -22,9 +21,7 @@ export async function getLinks (): Promise<Either<null, getLinksOutput>> {
             accessCount: schema.links.accessCount,
         })
         .from(schema.links)
-        .orderBy(fields => {
-            return desc(fields.id)
-        });
+        .orderBy(desc(schema.links.id));
 
     return makeRight({ links });
 }

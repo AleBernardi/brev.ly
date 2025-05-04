@@ -4,14 +4,14 @@ import { FastifyPluginAsyncZod } from "fastify-type-provider-zod";
 import { z } from 'zod';
 
 export const getLinkRoute: FastifyPluginAsyncZod = async server => {
-    server.get('/:url', {
+    server.get('/:shortUrl', {
         schema: {
             summary: 'Get link',
-            tags: ['link'],
+            tags: ['links'],
             response: {
-                200: z.object({ 
+                200: z.object({
                     link: z.object({
-                        originalUrl: z.string(), 
+                        originalUrl: z.string(),
                         shortUrl: z.string(),
                     })
                 }),
@@ -21,12 +21,12 @@ export const getLinkRoute: FastifyPluginAsyncZod = async server => {
             }
         }
     }, async (request, reply) => {
-        const { url } = request.params as { url: string };
-        const result = await getLink(url)
+        const { shortUrl } = request.params as { shortUrl: string };
+        const result = await getLink(shortUrl)
 
         if (isRight(result)) {
             const { link } = unwrapEither(result)
-            return reply.status(200).send( { link } )
+            return reply.status(200).send({ link })
         }
 
         return reply.status(400).send({

@@ -4,46 +4,49 @@ import { Either, makeLeft, makeRight } from "@/shared/either";
 import { z } from "zod";
 
 const insertLinkInput = z.object({
-    originalUrl: z.string(),
-    shortUrl: z.string()
+  originalUrl: z.string(),
+  shortUrl: z.string()
 })
 
 type InsertLinkInput = z.input<typeof insertLinkInput>
 
-export async function insertLink (input: InsertLinkInput): Promise<Either<{ type: string, message: string }, {
-    id: string,
-    originalUrl: string,
-    shortUrl: string,
-    accessCount: number,
-    createdAt: Date
+export async function insertLink(input: InsertLinkInput): Promise<Either<{ message: string }, {
+  id: string;
+  originalUrl: string;
+  shortUrl: string;
+  accessCount: number;
+  createdAt: Date;
 }>> {
-    const { originalUrl, shortUrl } = insertLinkInput.parse(input)
-    
-    try {
-        const result = await db.insert(schema.links).values({
-            originalUrl: originalUrl,
-            shortUrl: shortUrl
-        }).returning();
+  const { originalUrl, shortUrl } = insertLinkInput.parse(input);
 
-        return makeRight({
-            id: result[0].id,
-            originalUrl: result[0].originalUrl,
-            shortUrl: result[0].shortUrl,
-            accessCount: result[0].accessCount,
-            createdAt: result[0].createdAt,
-        });
-    } catch (error: any) {
-      // Postgres: código de erro 23505 = unique_violation
-      if (error.code === "23505" && error.constraint_name === "links_short_url_unique") {
-        return makeLeft({
-          type: "DUPLICATE_SHORT_URL",
-          message: `O link encurtado  "${shortUrl}" já existe.`
-        });
-      }
-  
-      return makeLeft({
-        type: "UNKNOWN",
-        message: "Algo deu errado ao salvar o link. Tente novamente em instantes!"
-      });
+  try {
+    const [link] = await db
+      .insert(schema.links)
+      .values({ originalUrl, shortUrl })
+      .returning();
+
+    if (!link) {
+      return makeLeft({ message: "Erro ao inserir o link. Nenhum dado retornado." });
     }
+
+    return makeRight({
+      id: link.id,
+      originalUrl: link.originalUrl,
+      shortUrl: link.shortUrl,
+      accessCount: link.accessCount,
+      createdAt: link.createdAt
+    });
+
+  } catch (error: any) {
+    // Código 23505 = violação de restrição única no PostgreSQL
+    if (error.code === "23505" && error.constraint_name === "links_short_url_unique") {
+      return makeLeft({ message: `O link encurtado "${shortUrl}" já existe.` });
+    }
+
+    console.error("Erro ao inserir link:", error);
+
+    return makeLeft({
+      message: "Erro inesperado ao salvar o link. Tente novamente em instantes."
+    });
+  }
 }

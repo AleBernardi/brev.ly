@@ -3,7 +3,7 @@ import { isRight, unwrapEither } from "@/shared/either";
 import { FastifyPluginAsyncZod } from "fastify-type-provider-zod";
 import { z } from 'zod';
 
-export const newLinkRoute: FastifyPluginAsyncZod = async server => {
+export const insertLinkRoute: FastifyPluginAsyncZod = async server => {
     server.post('/links', {
         schema: {
             summary: 'Save a new link',
@@ -21,19 +21,19 @@ export const newLinkRoute: FastifyPluginAsyncZod = async server => {
 
         const data = request.body;
 
-        if(!data.originalUrl) {
-            return reply.status(400).send({ message: 'O link original é obrigatório.'})
+        if (!data.originalUrl) {
+            return reply.status(400).send({ message: 'O link original é obrigatório.' })
         }
 
-        if(!data.shortUrl) {
-            return reply.status(400).send({ message: 'O link encurtado é obrigatório.'})
+        if (!data.shortUrl) {
+            return reply.status(400).send({ message: 'O link encurtado é obrigatório.' })
         }
 
-        if(data.shortUrl === 'links' || data.shortUrl === 'not-found') {
-            return reply.status(400).send({ message: `O link encurtado  "${data.shortUrl}" é restrito.`})
+        if (data.shortUrl === 'links' || data.shortUrl === 'not-found') {
+            return reply.status(400).send({ message: `O link encurtado  "${data.shortUrl}" é restrito.` })
         }
 
-        if(!data.originalUrl.startsWith('https://')) {
+        if (!data.originalUrl.startsWith('https://')) {
             data.originalUrl = 'https://' + data.originalUrl;
         }
 
