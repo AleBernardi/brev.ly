@@ -19,7 +19,6 @@ export function NewLinkWidget({ onSuccess }: NewLinkWidgetProps) {
     const { register, handleSubmit, reset, formState: { errors } } = useForm<FormData>();
 
     async function onSubmit(data: FormData) {
-
         await axios.post(apiUrl + "/links", data, {
             headers: {
                 "Content-Type": "application/json"
@@ -29,7 +28,6 @@ export function NewLinkWidget({ onSuccess }: NewLinkWidgetProps) {
             reset();
             onSuccess();
         }).catch((error) => {
-            console.log(error);
             toast.error('Erro ao salvar o link.', {
                 description: error?.response?.data?.message || "Ocorreu um erro inesperado. Por favor, tente novamente em instantes."
             });

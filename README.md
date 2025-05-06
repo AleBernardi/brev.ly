@@ -10,15 +10,15 @@ O objetivo é criar uma aplicação que permita o cadastro, listagem e remoção
 - [X]  Deve ser possível criar um link
     - [X]  Não deve ser possível criar um link com URL encurtada mal formatada
     - [X]  Não deve ser possível criar um link com URL encurtada já existente
-- [ ]  Deve ser possível deletar um link
+- [x]  Deve ser possível deletar um link
 - [X]  Deve ser possível obter a URL original por meio de uma URL encurtada
 - [X]  Deve ser possível listar todas as URL’s cadastradas
 - [X]  Deve ser possível incrementar a quantidade de acessos de um link
 - [ ]  Deve ser possível exportar os links criados em um CSV
-    - [ ]  Deve ser possível acessar o CSV por meio de uma CDN (Amazon S3, Cloudflare R2, etc)
-    - [ ]  Deve ser gerado um nome aleatório e único para o arquivo
-    - [ ]  Deve ser possível realizar a listagem de forma performática
-    - [ ]  O CSV deve ter campos como, URL original, URL encurtada, contagem de acessos e data de criação.
+    - [x]  Deve ser possível acessar o CSV por meio de uma CDN (Amazon S3, Cloudflare R2, etc)
+    - [x]  Deve ser gerado um nome aleatório e único para o arquivo
+    - [x]  Deve ser possível realizar a listagem de forma performática
+    - [x]  O CSV deve ter campos como, URL original, URL encurtada, contagem de acessos e data de criação.
 
 ## Front-end
 
@@ -29,11 +29,11 @@ Assim como na API, temos as seguintes funcionalidades e regras:
 - [X]  Deve ser possível criar um link
     - [X]  Não deve ser possível criar um link com encurtamento mal formatado
     - [X]  Não deve ser possível criar um link com encurtamento já existente
-- [ ]  Deve ser possível deletar um link
+- [x]  Deve ser possível deletar um link
 - [X]  Deve ser possível obter a URL original por meio do encurtamento
 - [X]  Deve ser possível listar todas as URL’s cadastradas
 - [X]  Deve ser possível incrementar a quantidade de acessos de um link
-- [ ]  Deve ser possível baixar um CSV com o relatório dos links criados
+- [x]  Deve ser possível baixar um CSV com o relatório dos links criados
 
 Além disso, também temos algumas regras importantes específicas para o front-end:
 

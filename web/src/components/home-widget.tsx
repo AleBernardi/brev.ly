@@ -50,7 +50,7 @@ export function HomeWidget() {
                 <div className="flex flex-col md:flex-row gap-4 justify-center items-start">
                     <NewLinkWidget onSuccess={searchLinks} />
 
-                    <ListLinksWidget loading={loading} links={links} onClick={searchLinks} />
+                    <ListLinksWidget loading={loading} links={links} searchLinks={searchLinks} />
                 </div>
             </div>
         </div >

@@ -1,5 +1,8 @@
 import { Copy, Trash } from "@phosphor-icons/react";
+import axios from "axios";
 import { toast } from "sonner";
+
+const apiUrl = import.meta.env.VITE_API_URL;
 
 interface LinkWidgetProps {
     link: {
@@ -8,13 +11,11 @@ interface LinkWidgetProps {
         originalUrl: string;
         accessCount: number;
     };
-    onClick: () => void;
+    loading?: boolean;
+    searchLinks: () => void;
 }
 
-interface LinkWidgetProps {
-}
-
-export function LinkWidget({ link, onClick }: LinkWidgetProps) {
+export function LinkWidget({ link, searchLinks }: LinkWidgetProps) {
 
     const url = window.location;
 
@@ -30,13 +31,36 @@ export function LinkWidget({ link, onClick }: LinkWidgetProps) {
             });
     }
 
+    async function deleteLink() {
+        const confirmacao = window.confirm('Você tem certeza que deseja deletar este link?');
+
+        if (confirmacao) {
+            await axios.delete(apiUrl + "/links", {
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                params: {
+                    shortUrl: link.shortUrl
+                }
+            }).then((response) => {
+                toast.success(response?.data?.message);
+                searchLinks();
+            }).catch((error) => {
+                toast.error(`Erro ao deletar o link "${link.shortUrl}".`, {
+                    description: error?.response?.data?.message || "Ocorreu um erro inesperado. Por favor, tente novamente em instantes."
+                });
+
+            });
+        }
+    }
+
     return (
         <div className="border-t py-4 flex items-start justify-between">
             <div className="flex flex-col">
                 <a
                     onClick={() => {
                         setTimeout(() => {
-                            onClick();
+                            searchLinks();
                         }, 1000);
                     }}
                     href={url + link.shortUrl + `?urlOriginal=${link.originalUrl}`}
@@ -60,6 +84,7 @@ export function LinkWidget({ link, onClick }: LinkWidgetProps) {
                     <Copy size={16} className="text-gray-600" />
                 </button>
                 <button
+                    onClick={deleteLink}
                     className="p-2 bg-gray-100 hover:bg-gray-200 rounded-md"
                     title="Excluir link"
                 >
